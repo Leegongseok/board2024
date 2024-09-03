@@ -1,9 +1,6 @@
 package kr.ac.kopo.board2024.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -11,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = "writer")
 
 public class Board extends BaseEntity {
     @Id //기본키설정(primarykey )설정
@@ -20,4 +17,8 @@ public class Board extends BaseEntity {
     private String title;
     private String content;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Member writer; //Foreign key 설정(참조무결성 유지)
+
 }
+
