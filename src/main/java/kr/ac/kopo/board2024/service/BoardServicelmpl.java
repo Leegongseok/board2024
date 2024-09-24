@@ -55,6 +55,15 @@ public class BoardServicelmpl implements BoardService{
         //원래게시글삭제
         repository.deleteById(bno);
     }
+    @Transactional
+    @Override
+    public void modify(BoardDTO boardDTO) {
+        Board board =repository.getReferenceById(boardDTO.getBno());
+        board.changeTitle(boardDTO.getTitle());
+        board.changeContent(boardDTO.getContent());
+
+        repository.save(board);
+    }
 
 
 }
