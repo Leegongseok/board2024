@@ -2,6 +2,8 @@ package kr.ac.kopo.board2024.service;
 
 
 import kr.ac.kopo.board2024.dto.BoardDTO;
+import kr.ac.kopo.board2024.dto.PageRequestDTO;
+import kr.ac.kopo.board2024.dto.PageResultDTO;
 import kr.ac.kopo.board2024.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +25,31 @@ public class BoardServiceTests {
         Long bno= boardService.register(dto);
         System.out.println("정상적으로 글이 저장되었습니다. :"+bno);
     }
+
+    @Test
+    public void testList(){
+        PageRequestDTO pageRequestDTO =new PageRequestDTO();
+
+        PageResultDTO<BoardDTO,Object[]> result=boardService.getList(pageRequestDTO);
+
+        for(BoardDTO boardDTO : result.getDtoList()){
+            System.out.println(boardDTO);
+
+        }
+    }
+    @Test void testGet(){
+        Long bno=2L;
+
+        BoardDTO boardDTO =boardService.get(bno);
+
+        System.out.println(boardDTO);
+    }
+    @Test
+    void testRemove(){
+        Long bno=1L;
+        boardService.removeWithReplies(bno);
+
+    }
 }
+
+

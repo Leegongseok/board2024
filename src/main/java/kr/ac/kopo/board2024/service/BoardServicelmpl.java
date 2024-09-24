@@ -5,11 +5,14 @@ import kr.ac.kopo.board2024.dto.PageRequestDTO;
 import kr.ac.kopo.board2024.dto.PageResultDTO;
 import kr.ac.kopo.board2024.entity.Board;
 import kr.ac.kopo.board2024.entity.Member;
+import kr.ac.kopo.board2024.entity.Reply;
 import kr.ac.kopo.board2024.repository.BoardRepository;
+import kr.ac.kopo.board2024.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Function;
 
@@ -18,6 +21,7 @@ import java.util.function.Function;
 
 public class BoardServicelmpl implements BoardService{
     private final BoardRepository repository;
+    private final ReplyRepository replyrepository;
     @Override
     public Long register(BoardDTO dto) {
         Board board =dtoToEntity(dto);
@@ -34,4 +38,23 @@ public class BoardServicelmpl implements BoardService{
 
         return new PageResultDTO<>(result,fn);
     }
+
+    @Override
+    public BoardDTO get(Long bno) {
+        Object result =repository.getBoardByBno(bno);
+
+        Object[] arr=(Object[]) result;
+        BoardDTO boardDTO=entityToDTO((Board) arr[0],(Member) arr[1],(Long) arr[2]);
+        return boardDTO;
+    }
+    @Transactional
+    @Override
+    public void removeWithReplies(Long bno) {
+        //댓글삭제
+        replyrepository.deleteByBno(bno);
+        //원래게시글삭제
+        repository.deleteById(bno);
+    }
+
+
 }
